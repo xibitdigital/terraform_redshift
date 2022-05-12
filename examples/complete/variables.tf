@@ -24,12 +24,6 @@ variable "wlm_json_configuration" {
   default     = "[{\"query_concurrency\": 5}]"
 }
 
-variable "eip_enabled" {
-  type        = bool
-  description = "Whether to provision and attach an Elastic IP to be used as the SFTP endpoint, an EIP will be provisioned per subnet"
-  default     = false
-}
-
 variable "environment" {
   description = "A name that identifies the enviroment you are deploying into"
   type        = string

@@ -47,7 +47,6 @@ Please have a look at the in the examples folder for examples.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.57.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
@@ -61,7 +60,6 @@ Please have a look at the in the examples folder for examples.
 
 | Name | Type |
 |------|------|
-| [aws_eip.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [random_string.root_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [random_string.root_username](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 
@@ -72,7 +70,6 @@ Please have a look at the in the examples folder for examples.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Custom name of the cluster | `string` | n/a | yes |
 | <a name="input_cluster_nodes"></a> [cluster\_nodes](#input\_cluster\_nodes) | Number of nodes in the cluster (values greater than 1 will trigger 'cluster\_type' of 'multi-node') | `number` | `1` | no |
 | <a name="input_db_name"></a> [db\_name](#input\_db\_name) | The name of the database to create | `string` | n/a | yes |
-| <a name="input_eip_enabled"></a> [eip\_enabled](#input\_eip\_enabled) | Whether to provision and attach an Elastic IP to be used as the SFTP endpoint, an EIP will be provisioned per subnet | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | A name that identifies the enviroment you are deploying into | `string` | n/a | yes |
 | <a name="input_node_type"></a> [node\_type](#input\_node\_type) | Node Type of Redshift cluster | `string` | `"dc2.large"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to all resources | `map(string)` | `{}` | no |

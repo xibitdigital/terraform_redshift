@@ -2,7 +2,6 @@
 region                 = "eu-west-2"
 cluster_name           = "foo-cluster"
 db_name                = "foo"
-eip_enabled            = false
 environment            = "notprod"
 node_type              = "dc2.large"
 cluster_nodes          = 1

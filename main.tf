@@ -17,15 +17,6 @@ resource "random_string" "root_password" {
   special = false
 }
 
-######
-# EIP
-######
-resource "aws_eip" "redshift" {
-  count = var.eip_enabled ? 1 : 0
-
-  vpc = true
-}
-
 ###########################
 # Security group
 ###########################
@@ -72,7 +63,7 @@ module "redshift" {
 
   enable_case_sensitive_identifier = true
 
-  elastic_ip = var.eip_enabled ? aws_eip.redshift.*.id[0] : null
+  elastic_ip = null # redshift as database should always stay behind a private VPC
 
   wlm_json_configuration = var.wlm_json_configuration
   subnets                = var.vpc_subnets
