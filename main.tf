@@ -60,6 +60,7 @@ module "redshift" {
   # enable also kms on the bucket https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L201
 
   # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
+  enhanced_vpc_routing = true
 
   enable_case_sensitive_identifier = true # eanbled as best practice
 
