@@ -13,12 +13,27 @@ This module creates all resurces for the AWS Redshift service.
 
 ## Usage
 
-TODO
 
 ```
+module "redshift" {
+  source = "../../"
 
+  vpc_id                 = module.vpc.vpc_id
+  vpc_cidr_block         = [module.vpc.vpc_cidr_block]
+  vpc_subnets            = module.vpc.redshift_subnets
+  cluster_name           = var.cluster_name
+  cluster_nodes          = var.cluster_nodes
+  wlm_json_configuration = var.wlm_json_configuration
+  node_type              = var.node_type
+  db_name                = var.db_name
+  eip_enabled            = var.eip_enabled
+
+  environment = var.environment
+  tags        = var.tags
+}
 ```
 
+Please have a look at the in the examples folder for examples.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
