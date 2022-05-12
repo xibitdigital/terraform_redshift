@@ -61,9 +61,9 @@ module "redshift" {
 
   # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
 
-  enable_case_sensitive_identifier = true
+  enable_case_sensitive_identifier = true # eanbled as best practice
 
-  elastic_ip = null # redshift as database should always stay behind a private VPC
+  elastic_ip = null # redshift as database should always stay behind a VPC private subnet 
 
   wlm_json_configuration = var.wlm_json_configuration
   subnets                = var.vpc_subnets
