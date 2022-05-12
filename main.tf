@@ -61,8 +61,16 @@ module "redshift" {
   cluster_master_username = random_string.root_username.result
   cluster_master_password = random_string.root_password.result
 
-  enable_user_activity_logging = true # default to true as best practice
-  encrypted                    = true # default to true as best practice
+  enable_user_activity_logging = "true" # default to true as best practice
+  encrypted                    = true   # default to true as best practice
+
+  # logging https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L115
+  # if true create s3 bucket
+  # enable also kms on the bucket https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L201
+
+  # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
+
+  enable_case_sensitive_identifier = true
 
   elastic_ip = var.eip_enabled ? aws_eip.redshift.*.id[0] : null
 
