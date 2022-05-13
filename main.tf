@@ -1,5 +1,5 @@
 locals {
-  sg_name = "redshift-sg"
+  sg_name_prefix = "redshift-sg"
 }
 
 ######
@@ -24,7 +24,7 @@ module "sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/redshift"
   version = "~> 4.0"
 
-  name   = local.sg_name
+  name   = local.sg_name_prefix
   vpc_id = var.vpc_id
 
   # Allow ingress rules to be accessed only within current VPC
@@ -34,7 +34,7 @@ module "sg" {
   egress_rules = ["all-all"]
 
   tags = merge(local.default_tags, tomap({
-    "Name" = format("%s", "${var.cluster_name}-${local.sg_name}")
+    "Name" = format("%s", "${local.sg_name_prefix}-${var.cluster_name}")
   }))
 }
 
