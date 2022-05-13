@@ -52,7 +52,7 @@ Please have a look at the in the examples folder for examples.
 |------|--------|---------|
 | <a name="module_redshift"></a> [redshift](#module\_redshift) | terraform-aws-modules/redshift/aws | ~> 3.0 |
 | <a name="module_redshift_s3_logs"></a> [redshift\_s3\_logs](#module\_redshift\_s3\_logs) | terraform-aws-modules/s3-bucket/aws | n/a |
-| <a name="module_sg"></a> [sg](#module\_sg) | terraform-aws-modules/security-group/aws//modules/redshift | ~> 4.0 |
+| <a name="module_redshift_sg"></a> [redshift\_sg](#module\_redshift\_sg) | terraform-aws-modules/security-group/aws//modules/redshift | ~> 4.0 |
 
 ## Resources
 

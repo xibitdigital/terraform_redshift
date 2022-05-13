@@ -1,5 +1,5 @@
 locals {
-  sg_name_prefix = "redshift-sg"
+  sg_name_prefix = "redshift_sg"
   s3_name_prefix = "redshift-s3-access-logs"
 }
 
@@ -93,7 +93,7 @@ module "redshift_s3_logs" {
 ###########################
 # Security group
 ###########################
-module "sg" {
+module "redshift_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/redshift"
   version = "~> 4.0"
 
@@ -144,7 +144,7 @@ module "redshift" {
 
   wlm_json_configuration = var.wlm_json_configuration
   subnets                = var.vpc_subnets
-  vpc_security_group_ids = [module.sg.security_group_id]
+  vpc_security_group_ids = [module.redshift_sg.security_group_id]
 
   tags = merge(local.default_tags, tomap({
     "Name" = format("%s", var.cluster_name)
