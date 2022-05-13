@@ -22,9 +22,6 @@ module "redshift" {
   vpc_cidr_block         = [module.vpc.vpc_cidr_block]
   vpc_subnets            = module.vpc.redshift_subnets
   cluster_name           = var.cluster_name
-  cluster_nodes          = var.cluster_nodes
-  wlm_json_configuration = var.wlm_json_configuration
-  node_type              = var.node_type
   db_name                = var.db_name
 
   environment = var.environment
