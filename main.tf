@@ -131,12 +131,9 @@ module "redshift" {
   encrypted                    = true   # default to true as best practice
 
   # logging https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L115
-  enable_logging = true
-  # if true create s3 bucket
-  # enable also kms on the bucket https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L201
+  enable_logging      = true
   logging_bucket_name = module.s3_logs.s3_bucket_id
-  # kms_key_id = aws_kms_key.key_id
-  kms_key_id = aws_kms_key.redshift.arn
+  kms_key_id          = aws_kms_key.redshift.arn
 
   # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
   enhanced_vpc_routing = true
