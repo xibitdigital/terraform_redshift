@@ -1,5 +1,6 @@
 locals {
   sg_name_prefix = "redshift-sg"
+  s3_name_prefix = "redshift-s3-access-logs"
 }
 
 ######
@@ -17,6 +18,78 @@ resource "random_string" "root_password" {
   special = false
 }
 
+######
+# S3 bucket
+######
+data "aws_iam_policy_document" "s3_redshift" {
+  statement {
+    sid       = "RedshiftAcl"
+    actions   = ["s3:GetBucketAcl"]
+    resources = [module.s3_logs.s3_bucket_arn]
+
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_redshift_service_account.this.arn]
+    }
+  }
+
+  statement {
+    sid       = "RedshiftWrite"
+    actions   = ["s3:PutObject"]
+    resources = ["${module.s3_logs.s3_bucket_arn}/*"]
+    condition {
+      test     = "StringEquals"
+      values   = ["bucket-owner-full-control"]
+      variable = "s3:x-amz-acl"
+    }
+
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_redshift_service_account.this.arn]
+    }
+  }
+}
+
+
+resource "aws_kms_key" "redshift" {
+  description             = "Customer managed key for encrypting Redshift cluster"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+
+  tags = local.default_tags
+}
+
+# resource "aws_kms_key" "redshift_snapshots" {
+#   provider = aws.us_east_1
+
+#   description             = "Customer managed key for encrypting Redshift snapshot cross-region"
+#   deletion_window_in_days = 7
+#   enable_key_rotation     = true
+
+#   tags = local.tags
+# }
+
+
+module "s3_logs" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+  # version = "~> 2.0"
+
+  bucket = local.s3_name_prefix
+  acl    = "log-delivery-write"
+
+  attach_policy = true
+  policy        = data.aws_iam_policy_document.s3_redshift.json
+
+  attach_deny_insecure_transport_policy = true
+  force_destroy                         = true
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  tags = local.default_tags
+}
 ###########################
 # Security group
 ###########################
@@ -41,6 +114,8 @@ module "sg" {
 ###########
 # Redshift
 ###########
+data "aws_redshift_service_account" "this" {}
+
 module "redshift" {
   source  = "terraform-aws-modules/redshift/aws"
   version = "~> 3.0"
@@ -56,8 +131,12 @@ module "redshift" {
   encrypted                    = true   # default to true as best practice
 
   # logging https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L115
+  enable_logging = true
   # if true create s3 bucket
   # enable also kms on the bucket https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L201
+  logging_bucket_name = module.s3_logs.s3_bucket_id
+  # kms_key_id = aws_kms_key.key_id
+  kms_key_id = aws_kms_key.redshift.arn
 
   # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
   enhanced_vpc_routing = true
