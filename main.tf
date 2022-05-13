@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "s3_redshift" {
   statement {
     sid       = "RedshiftAcl"
     actions   = ["s3:GetBucketAcl"]
-    resources = [module.s3_logs.s3_bucket_arn]
+    resources = [module.redshift_s3_logs.s3_bucket_arn]
 
     principals {
       type        = "AWS"
@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "s3_redshift" {
   statement {
     sid       = "RedshiftWrite"
     actions   = ["s3:PutObject"]
-    resources = ["${module.s3_logs.s3_bucket_arn}/*"]
+    resources = ["${module.redshift_s3_logs.s3_bucket_arn}/*"]
     condition {
       test     = "StringEquals"
       values   = ["bucket-owner-full-control"]
@@ -70,7 +70,7 @@ resource "aws_kms_key" "redshift" {
 # }
 
 
-module "s3_logs" {
+module "redshift_s3_logs" {
   source = "terraform-aws-modules/s3-bucket/aws"
   # version = "~> 2.0"
 
@@ -132,7 +132,7 @@ module "redshift" {
 
   # logging https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L115
   enable_logging      = true
-  logging_bucket_name = module.s3_logs.s3_bucket_id
+  logging_bucket_name = module.redshift_s3_logs.s3_bucket_id
   kms_key_id          = aws_kms_key.redshift.arn
 
   # enanched routing https://github.com/terraform-aws-modules/terraform-aws-redshift/blob/master/variables.tf#L207
