@@ -26,7 +26,6 @@ module "redshift" {
   wlm_json_configuration = var.wlm_json_configuration
   node_type              = var.node_type
   db_name                = var.db_name
-  eip_enabled            = var.eip_enabled
 
   environment = var.environment
   tags        = var.tags
