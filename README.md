@@ -51,7 +51,7 @@ Please have a look at the in the examples folder for examples.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_redshift"></a> [redshift](#module\_redshift) | terraform-aws-modules/redshift/aws | ~> 3.0 |
-| <a name="module_redshift_s3_logs"></a> [redshift\_s3\_logs](#module\_redshift\_s3\_logs) | terraform-aws-modules/s3-bucket/aws | n/a |
+| <a name="module_redshift_s3_logs"></a> [redshift\_s3\_logs](#module\_redshift\_s3\_logs) | terraform-aws-modules/s3-bucket/aws | ~> 2.0 |
 | <a name="module_redshift_sg"></a> [redshift\_sg](#module\_redshift\_sg) | terraform-aws-modules/security-group/aws//modules/redshift | ~> 4.0 |
 
 ## Resources
@@ -68,11 +68,23 @@ Please have a look at the in the examples folder for examples.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allow_version_upgrade"></a> [allow\_version\_upgrade](#input\_allow\_version\_upgrade) | (Optional) If true, major version upgrades can be applied during the maintenance window to the Amazon Redshift engine that is running on the cluster. | `bool` | `true` | no |
+| <a name="input_automated_snapshot_retention_period"></a> [automated\_snapshot\_retention\_period](#input\_automated\_snapshot\_retention\_period) | How long will we retain backups | `number` | `0` | no |
+| <a name="input_cluster_iam_roles"></a> [cluster\_iam\_roles](#input\_cluster\_iam\_roles) | A list of IAM Role ARNs to associate with the cluster. A Maximum of 10 can be associated to the cluster at any time. | `list(string)` | `[]` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Custom name of the cluster | `string` | n/a | yes |
 | <a name="input_cluster_nodes"></a> [cluster\_nodes](#input\_cluster\_nodes) | Number of nodes in the cluster (values greater than 1 will trigger 'cluster\_type' of 'multi-node') | `number` | `1` | no |
 | <a name="input_db_name"></a> [db\_name](#input\_db\_name) | The name of the database to create | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | A name that identifies the enviroment you are deploying into | `string` | n/a | yes |
+| <a name="input_final_snapshot_identifier"></a> [final\_snapshot\_identifier](#input\_final\_snapshot\_identifier) | (Optional) The identifier of the final snapshot that is to be created immediately before deleting the cluster. If this parameter is provided, 'skip\_final\_snapshot' must be false. | `string` | `""` | no |
+| <a name="input_max_concurrency_scaling_clusters"></a> [max\_concurrency\_scaling\_clusters](#input\_max\_concurrency\_scaling\_clusters) | (Optional) Max concurrency scaling clusters parameter (0 to 10) | `string` | `"1"` | no |
 | <a name="input_node_type"></a> [node\_type](#input\_node\_type) | Node Type of Redshift cluster | `string` | `"dc2.large"` | no |
+| <a name="input_owner_account"></a> [owner\_account](#input\_owner\_account) | (Optional) The AWS customer account used to create or copy the snapshot. Required if you are restoring a snapshot you do not own, optional if you own the snapshot. | `string` | `null` | no |
+| <a name="input_preferred_maintenance_window"></a> [preferred\_maintenance\_window](#input\_preferred\_maintenance\_window) | When AWS can run snapshot, can't overlap with maintenance window | `string` | `"sat:10:00-sat:10:30"` | no |
+| <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | If true (default), no snapshot will be made before deleting DB | `bool` | `true` | no |
+| <a name="input_snapshot_cluster_identifier"></a> [snapshot\_cluster\_identifier](#input\_snapshot\_cluster\_identifier) | (Optional) The name of the cluster the source snapshot was created from. | `string` | `null` | no |
+| <a name="input_snapshot_copy_destination_region"></a> [snapshot\_copy\_destination\_region](#input\_snapshot\_copy\_destination\_region) | (Optional) The name of the region where the snapshot will be copied. | `string` | `null` | no |
+| <a name="input_snapshot_copy_grant_name"></a> [snapshot\_copy\_grant\_name](#input\_snapshot\_copy\_grant\_name) | (Optional) The name of the grant in the destination region. Required if you have a KMS encrypted cluster. | `string` | `null` | no |
+| <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | (Optional) The name of the snapshot from which to create the new cluster. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to all resources | `map(string)` | `{}` | no |
 | <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | VPC ID CIDR block | `list(string)` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID | `string` | n/a | yes |

@@ -1,7 +1,4 @@
-locals {
-  sg_name_prefix = "redshift_sg"
-  s3_name_prefix = "redshift-s3-access-logs"
-}
+
 
 ######
 # Root credentials
@@ -50,7 +47,6 @@ data "aws_iam_policy_document" "s3_redshift" {
   }
 }
 
-
 resource "aws_kms_key" "redshift" {
   description             = "Customer managed key for encrypting Redshift cluster"
   deletion_window_in_days = 7
@@ -59,20 +55,9 @@ resource "aws_kms_key" "redshift" {
   tags = local.default_tags
 }
 
-# resource "aws_kms_key" "redshift_snapshots" {
-#   provider = aws.us_east_1
-
-#   description             = "Customer managed key for encrypting Redshift snapshot cross-region"
-#   deletion_window_in_days = 7
-#   enable_key_rotation     = true
-
-#   tags = local.tags
-# }
-
-
 module "redshift_s3_logs" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-  # version = "~> 2.0"
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 2.0"
 
   bucket = local.s3_name_prefix
   acl    = "log-delivery-write"
@@ -146,6 +131,29 @@ module "redshift" {
   subnets                = var.vpc_subnets
   vpc_security_group_ids = [module.redshift_sg.security_group_id]
 
+  # Restore from snapshot
+  snapshot_identifier         = var.snapshot_identifier
+  snapshot_cluster_identifier = var.snapshot_cluster_identifier
+  owner_account               = var.owner_account
+
+  # Snapshots and backups
+  final_snapshot_identifier           = var.skip_final_snapshot ? null : var.final_snapshot_identifier
+  skip_final_snapshot                 = var.skip_final_snapshot
+  automated_snapshot_retention_period = var.automated_snapshot_retention_period
+  snapshot_copy_grant_name            = var.snapshot_copy_grant_name
+
+  # Snapshots copy to another region
+  snapshot_copy_destination_region = var.snapshot_copy_destination_region
+
+  # Other settings
+  allow_version_upgrade            = var.allow_version_upgrade
+  max_concurrency_scaling_clusters = var.max_concurrency_scaling_clusters
+  preferred_maintenance_window     = var.preferred_maintenance_window
+
+  # IAM Roles
+  cluster_iam_roles = var.cluster_iam_roles
+
+  # Tags
   tags = merge(local.default_tags, tomap({
     "Name" = format("%s", var.cluster_name)
   }))
